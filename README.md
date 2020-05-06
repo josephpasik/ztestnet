@@ -1,2 +1,0 @@
-# ztestnet
-Private blockchain testnet

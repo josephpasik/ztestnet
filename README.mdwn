@@ -1,0 +1,91 @@
+# Private Blockchain Manual
+
+## Preliminary Setup — Installing dependencies and environment configuration:
+
+- Clone the ropository to your machine: https://github.com/josephpasik/ztestnet
+
+- Download the blockchain tools (**Geth & Tools**): https://geth.ethereum.org/downloads/.  
+*This package includes the software we will need to manage our blockchain.*
+
+- Download **MyCrypto**: https://download.mycrypto.com/.  
+*We will use the MyCrypto GUI wallet to connect to our blockchain and make transactions.*
+
+- Copy the **node1** and **node2** folders and the **ztestnet.json** and **password.txt** files from the repository to the directory that contains the blockchain tools.
+
+- Navigate to the directory containing the blockchain tools and copied folders and files.
+
+## Initialize nodes:
+
+- Initialize the first node:
+```
+./geth —datadir node1 init ztestnet.json
+```
+- Initialize the second node:
+```
+./geth —datadir node2 init ztestnet.json
+```
+## Run nodes:
+
+- Launch the first node:
+
+```
+./geth --datadir node1 --networkid 488 --unlock "0x7F3069E21868ae5A5Cc19821236c6b35487496Cb" --rpc --mine --minerthreads 1 --allow-insecure-unlock --password password.txt
+```
+
+>Flag explanation:   
+**—networkid**: identifies the appropriate network provided a network id.  
+**—unlock**: unlocks the account provided an address.  
+**—rpc**: exposes a port on the node allowing commucation with the outside world.  
+**—mine**: tells node to mine new blocks.  
+**—minerthreads**: tells get how many CPU “workers” to use.  
+**—password**: finds password in provided text file to allow unlock.
+
+- Take note of your first node enode address (see screenshot below) as we will need this address to tell the second node where to find the first node.
+
+![](https://raw.githubusercontent.com/josephpasik/ztestnet/master/Screenshots/Node1%20Output.png)
+
+- Open another terminal window and navigate to the same directory again.
+
+- Launch the second node (enter the enode address of node 1):
+
+```
+./geth --datadir node2 --networkid 488 --unlock "0xfe6B492C5076aE913971fCEbbfb9446443530ebB" --port 30304 --bootnodes "<enode address>" --mine --minerthreads 1 --allow-insecure-unlock --password password.txt
+```
+
+>Flag explanation:   
+**—port**: sets the peer port.  
+**—bootnodes**: tells geth explicitly which node to connect to provided an enode address.
+
+## Send a test transaction:
+
+#### Use the MyCrypto GUI wallet to connect to the node with the exposed RPC port:
+
+- Launch the MyCrypto application.
+- Click "Change Network".
+- Set up refering to the screen shot below:
+
+![](https://raw.githubusercontent.com/josephpasik/ztestnet/master/Screenshots/mycrypto%20network%20setup.png)
+
+#### Access the wallet of node1:
+
+- Choose "Keystore File" as the option to access your wallet, then select the keystore file from it’s directory.
+
+![](https://raw.githubusercontent.com/josephpasik/ztestnet/master/Screenshots/node1%20keystore%20path.png)
+
+- Unlock the wallet with the password (password can be found in the **password.txt** file).
+
+#### Send ether:
+
+- Click the "View and Send" tab
+- Provide the public key address for the second node (0xfe6B492C5076aE913971fCEbbfb9446443530ebB).
+- Select amount of ether to send.
+
+![](https://raw.githubusercontent.com/josephpasik/ztestnet/master/Screenshots/send%20ether.png)
+
+- Confirm the transaction
+- Click "TX Status" to view transaction.
+
+![](https://raw.githubusercontent.com/josephpasik/ztestnet/master/Screenshots/transaction%20confirmation.png)
+
+
+### 	You have succesfully accessed the ztestnet blockchain and sent a test transaction!
